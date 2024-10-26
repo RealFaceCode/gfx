@@ -9,4 +9,5 @@ namespace gfx
     bool GFX_API Init(loadproc);
     void GFX_API DeInit();
     void GFX_API clear();
+    void GFX_API printVRVOpenGL();
 }
