@@ -4,11 +4,18 @@
 
 namespace gfx
 {
-    bool Init()
+    bool Init(loadproc getProcAddress)
     {
-        return gladLoadGL();
+        auto load = gladLoadGLLoader(getProcAddress);
+        return load;
     }
 
     void DeInit()
     {}
+
+    void clear()
+    {
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 }
