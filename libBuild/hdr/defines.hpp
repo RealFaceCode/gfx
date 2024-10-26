@@ -17,3 +17,9 @@
 #else
     #define GFX_API DLL_IMPORT
 #endif
+
+namespace gfx
+{
+    constexpr const char GFX[] = "GFX BUILD";
+    constexpr const char GL[] = "OPENGL";
+}
