@@ -1,4 +1,4 @@
-#include "vao.hpp"
+#include "buffers/vao.hpp"
 #include <glad/glad.h>
 #include <lc.hpp>
 
