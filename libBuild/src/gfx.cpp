@@ -13,13 +13,13 @@ namespace gfx
     void DeInit()
     {}
 
-    void clear()
+    void Clear()
     {
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void printVRVOpenGL()
+    void PrintVRVOpenGL()
     {
         std::string glVendor((const char*)glGetString(GL_VENDOR));
         std::string glRenderer((const char*)glGetString(GL_RENDERER));
@@ -27,5 +27,13 @@ namespace gfx
         lc::Log<"GFX BUILD">("DEBUG", "OpenGL Vendor: {}", glVendor);
         lc::Log<"GFX BUILD">("DEBUG", "OpenGL Renderer: {}", glRenderer);
         lc::Log<"GFX BUILD">("DEBUG", "OpenGL Version: {}", glVersion);
+    }
+
+    void WireFrameMode(bool mode)
+    {
+        if (mode)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
