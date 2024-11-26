@@ -3,7 +3,8 @@
 #include "defines.hpp"
 #include <glm/glm.hpp>
 
-enum class CameraMovement {
+enum class CameraMovement
+{
     FORWARD,
     BACKWARD,
     LEFT,
@@ -12,10 +13,16 @@ enum class CameraMovement {
     DOWN
 };
 
+enum class CameraType
+{
+    PERSPECTIVE,
+    ORTHOGRAPHIC
+};
+
 class GFX_API Camera {
 public:
-    Camera(glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float aspect);
-    Camera(glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float movementSpeed, float mouseSensitivity, float fov, float near, float far, float aspect, float maxFov, float minFov, float maxPitch, float minPitch);
+    Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float aspect);
+    Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float movementSpeed, float mouseSensitivity, float fov, float near, float far, float aspect, float maxFov, float minFov, float maxPitch, float minPitch);
 
     glm::mat4 GetViewMatrix();
     glm::mat4 GetProjectionMatrix();
@@ -43,6 +50,7 @@ private:
     void updateViewMatrix();
     void updateProjectionMatrix();
 
+    CameraType type;
     glm::vec3 position;
     glm::vec3 front;
     glm::vec3 up;

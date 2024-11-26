@@ -2,8 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera(glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float aspect)
-    : position(startPosition), worldUp(upDirection), updateView(true), updateProjection(true), yaw(startYaw),
+Camera::Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float aspect)
+    : type(type), position(startPosition), worldUp(upDirection), updateView(true), updateProjection(true), yaw(startYaw),
     pitch(startPitch), movementSpeed(2.5f), mouseSensitivity(0.1f), fov(45.0f), near(0.1f), far(100.0f),
     aspect(aspect), maxFov(45.0f), minFov(1.0f), maxPitch(89.0f), minPitch(-89.0f)
 {
@@ -11,8 +11,8 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, f
     update();
 }
 
-Camera::Camera(glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float movementSpeed, float mouseSensitivity, float fov, float near, float far, float aspect, float maxFov, float minFov, float maxPitch, float minPitch)
-    : position(startPosition), worldUp(upDirection), updateView(true), updateProjection(true), yaw(startYaw),
+Camera::Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float movementSpeed, float mouseSensitivity, float fov, float near, float far, float aspect, float maxFov, float minFov, float maxPitch, float minPitch)
+    : type(type), position(startPosition), worldUp(upDirection), updateView(true), updateProjection(true), yaw(startYaw),
     pitch(startPitch), movementSpeed(movementSpeed), mouseSensitivity(mouseSensitivity), fov(fov), near(near),
     far(far), aspect(aspect), maxFov(maxFov), minFov(minFov), maxPitch(maxPitch), minPitch(minPitch)
 {
@@ -126,7 +126,17 @@ void Camera::updateViewMatrix()
 
 void Camera::updateProjectionMatrix()
 {
-    projection = glm::perspective(glm::radians(fov), aspect, near, far);
+    switch (type)
+    {
+    case CameraType::PERSPECTIVE:
+        projection = glm::perspective(glm::radians(fov), aspect, near, far);
+        break;
+    case CameraType::ORTHOGRAPHIC:
+        projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, near, far);
+        break;
+    default:
+        break;
+    }
 }
 
 void Camera::setPosition(glm::vec3 position)
