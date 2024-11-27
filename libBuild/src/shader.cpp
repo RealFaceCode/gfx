@@ -31,7 +31,7 @@ namespace gfx
 
     void Shader::build()
     {
-        loadShader(program, paths);
+        LoadShader(program, paths);
         auto uniform = GetActiveUniforms(program);
         uniforms.clear();
         uniforms.reserve(uniform.size());

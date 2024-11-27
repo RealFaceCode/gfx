@@ -233,7 +233,7 @@ namespace gfx
             lc::Log<GL>("DEBUG", "Uniform: {}, Size: {}, Type: {}", uniform.name, uniform.size, GLTypeToString(uniform.type));
     }
 
-    bool isShaderCompiled(unsigned int shader)
+    bool IsShaderCompiled(unsigned int shader)
     {
         int success;
         char infoLog[512];
@@ -247,7 +247,7 @@ namespace gfx
         return true;
     }
 
-    bool isProgramLinked(unsigned int program)
+    bool IsProgramLinked(unsigned int program)
     {
         int success;
         char infoLog[512];
@@ -261,7 +261,7 @@ namespace gfx
         return true;
     }
 
-    bool isProgramValid(unsigned int program)
+    bool IsProgramValid(unsigned int program)
     {
         glValidateProgram(program);
         int success;
@@ -276,12 +276,12 @@ namespace gfx
         return true;
     }
 
-    unsigned int compileShader(const char* source, GLenum type)
+    unsigned int CompileShader(const char* source, GLenum type)
     {
         unsigned int shader = glCreateShader(type);
         glShaderSource(shader, 1, &source, nullptr);
         glCompileShader(shader);
-        isShaderCompiled(shader);
+        IsShaderCompiled(shader);
         free((void*)source);
         return shader;
     }
@@ -292,13 +292,13 @@ namespace gfx
         for (auto shader : shaders)
             glAttachShader(program, shader);
         glLinkProgram(program);
-        isProgramLinked(program);
+        IsProgramLinked(program);
         for (auto shader : shaders)
             glDeleteShader(shader);
         return program;
     }
 
-    void loadShader(unsigned int& program, std::vector<std::pair<std::string, GLenum>>& paths)
+    void LoadShader(unsigned int& program, std::vector<std::pair<std::string, GLenum>>& paths)
     {
         size_t size = 0;
         std::vector<unsigned int> newShaders;
@@ -312,14 +312,14 @@ namespace gfx
                 lc::Log<GL>("ERROR", "Failed to read shader source: {}", path.first);
                 return;
             }
-            unsigned int shader = compileShader(source, path.second);
+            unsigned int shader = CompileShader(source, path.second);
             if(shader != 0)
                 newShaders.emplace_back(shader);
         }
 
         unsigned int newProgram = createShaderProgram(newShaders);
 
-        if (isProgramValid(newProgram))
+        if (IsProgramValid(newProgram))
         {
             glDeleteProgram(program);
             program = newProgram;
