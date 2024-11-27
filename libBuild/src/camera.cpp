@@ -31,7 +31,7 @@ namespace gfx {
         return projection;
     }
 
-    void Camera::ProcessKeyboard(CameraMovement direction, float deltaTime)
+    void Camera::processMovement(CameraMovement direction, float deltaTime)
     {
         float velocity = movementSpeed * deltaTime;
         switch(direction)
@@ -58,7 +58,7 @@ namespace gfx {
         updateView = true;
     }
 
-    void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
+    void Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPitch)
     {
         xoffset *= mouseSensitivity;
         yoffset *= mouseSensitivity;
@@ -77,7 +77,7 @@ namespace gfx {
         updateCameraVectors();
     }
 
-    void Camera::ProcessMouseScroll(float yoffset)
+    void Camera::processMouseScroll(float yoffset)
     {
         fov -= yoffset;
         if(fov > maxFov)

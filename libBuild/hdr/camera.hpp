@@ -27,9 +27,9 @@ namespace gfx {
 
         glm::mat4 GetViewMatrix();
         glm::mat4 GetProjectionMatrix();
-        void ProcessKeyboard(CameraMovement direction, float deltaTime);
-        void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
-        void ProcessMouseScroll(float yoffset);
+        void processMovement(CameraMovement direction, float deltaTime);
+        void processMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
+        void processMouseScroll(float yoffset);
         std::pair<bool, bool> update();
 
         void setPosition(glm::vec3 position);
