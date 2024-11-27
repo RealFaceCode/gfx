@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 set(PROJECT_NAME gfx)
 project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES C CXX)
 
-
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -24,7 +23,13 @@ if(NOT TARGET ${PROJECT_NAME})
     add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
     target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
     target_include_directories(${PROJECT_NAME} PUBLIC libBuild/hdr )
-    target_include_directories(${PROJECT_NAME} PRIVATE thirdparty/LogCraft/libBuild/hdr thirdparty/eUtil/libBuild/hdr thirdparty/glad/include thirdparty/glm)
+    target_include_directories(${PROJECT_NAME} PRIVATE 
+    thirdparty/LogCraft/libBuild/hdr 
+    thirdparty/eUtil/libBuild/hdr 
+    thirdparty/glad/include 
+    thirdparty/glm
+    thirdparty/stb
+    )
     target_link_libraries(${PROJECT_NAME} PRIVATE LogCraft eUtil glad glm)
     target_compile_definitions(${PROJECT_NAME} PRIVATE GFX_EXPORTS)
 endif()
