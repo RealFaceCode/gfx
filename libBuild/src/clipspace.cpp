@@ -19,6 +19,16 @@ namespace gfx
         glDisable(GL_SCISSOR_TEST);
     }
 
+    const glm::vec2& ClipSpace::getPos() const
+    {
+        return pos;
+    }
+
+    const glm::vec2& ClipSpace::getSize() const
+    {
+        return size;
+    }
+
     ScopedClipSpace::ScopedClipSpace(const ClipSpace& clipSpace)
     : cs(clipSpace)
     {
@@ -28,6 +38,16 @@ namespace gfx
     ScopedClipSpace::~ScopedClipSpace()
     {
         cs.end();
+    }
+
+    const glm::vec2& ScopedClipSpace::getPos() const
+    {
+        return cs.getPos();
+    }
+
+    const glm::vec2& ScopedClipSpace::getSize() const
+    {
+        return cs.getSize();
     }
 
     ScopedClipSpace2::ScopedClipSpace2(glm::vec2 pos, glm::vec2 size)
@@ -40,5 +60,15 @@ namespace gfx
     ScopedClipSpace2::~ScopedClipSpace2()
     {
         glDisable(GL_SCISSOR_TEST);
+    }
+
+    const glm::vec2& ScopedClipSpace2::getPos() const
+    {
+        return pos;
+    }
+
+    const glm::vec2& ScopedClipSpace2::getSize() const
+    {
+        return size;
     }
 }

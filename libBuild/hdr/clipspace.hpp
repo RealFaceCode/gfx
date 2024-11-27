@@ -15,6 +15,9 @@ namespace gfx
         void begin() const;
         void end() const;
 
+        const glm::vec2& getPos() const;
+        const glm::vec2& getSize() const;
+
     private:
         glm::vec2 pos;
         glm::vec2 size;
@@ -27,6 +30,9 @@ namespace gfx
         ScopedClipSpace(const ClipSpace& clipSpace);
         ~ScopedClipSpace();
 
+        const glm::vec2& getPos() const;
+        const glm::vec2& getSize() const;
+
     private:
         const ClipSpace& cs;
     };
@@ -37,6 +43,9 @@ namespace gfx
         ScopedClipSpace2() = delete;
         ScopedClipSpace2(glm::vec2 pos, glm::vec2 size);
         ~ScopedClipSpace2();
+
+        const glm::vec2& getPos() const;
+        const glm::vec2& getSize() const;
 
     private:
         glm::vec2 pos;
