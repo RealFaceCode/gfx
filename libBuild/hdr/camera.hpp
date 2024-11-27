@@ -45,6 +45,7 @@ namespace gfx {
         void setMinFov(float minFov);
         void setMaxPitch(float maxPitch);
         void setMinPitch(float minPitch);
+        void invertYAxisMouse(bool invert);
 
     private:
         void updateCameraVectors();
@@ -62,6 +63,7 @@ namespace gfx {
         glm::mat4 projection;
         bool updateView;
         bool updateProjection;
+        bool invertYAixsMouse;
 
         float yaw;
         float pitch;

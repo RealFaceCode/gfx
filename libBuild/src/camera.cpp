@@ -61,7 +61,10 @@ namespace gfx {
     void Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPitch)
     {
         xoffset *= mouseSensitivity;
-        yoffset *= mouseSensitivity;
+        if(invertYAixsMouse)
+            yoffset *= -mouseSensitivity;
+        else
+            yoffset *= mouseSensitivity;
 
         yaw += xoffset;
         pitch += yoffset;
@@ -210,5 +213,10 @@ namespace gfx {
     void Camera::setMinPitch(float minPitch)
     {
         this->minPitch = minPitch;
+    }
+
+    void Camera::invertYAxisMouse(bool invert)
+    {
+        invertYAixsMouse = invert;
     }
 } // namespace gfx
