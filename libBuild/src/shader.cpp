@@ -60,199 +60,231 @@ namespace gfx
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform1f(it->second, value);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, int value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform1i(it->second, value);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::vec2& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform2fv(it->second, 1, &value[0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::vec3& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform3fv(it->second, 1, &value[0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::vec4& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform4fv(it->second, 1, &value[0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat2& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix2fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat3& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix3fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat4& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix4fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat2x3& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix2x3fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat2x4& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix2x4fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat3x2& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix3x2fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat3x4& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix3x4fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat4x2& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix4x2fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const glm::mat4x3& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniformMatrix4x3fv(it->second, 1, GL_FALSE, &value[0][0]);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<float>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform1fv(it->second, value.size(), value.data());
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<int>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
         if (it != uniforms.end())
             glUniform1iv(it->second, value.size(), value.data());
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::vec2>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -267,13 +299,15 @@ namespace gfx
             }
             glUniform2fv(it->second, value.size(), data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::vec3>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -289,13 +323,15 @@ namespace gfx
             }
             glUniform3fv(it->second, value.size(), data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::vec4>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -312,13 +348,15 @@ namespace gfx
             }
             glUniform4fv(it->second, value.size(), data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat2>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -335,13 +373,15 @@ namespace gfx
             }
             glUniformMatrix2fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat3>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -363,13 +403,15 @@ namespace gfx
             }
             glUniformMatrix3fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat4>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -398,13 +440,15 @@ namespace gfx
             }
             glUniformMatrix4fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat2x3>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -423,13 +467,15 @@ namespace gfx
             }
             glUniformMatrix2x3fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat2x4>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -450,13 +496,15 @@ namespace gfx
             }
             glUniformMatrix2x4fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat3x2>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -475,13 +523,15 @@ namespace gfx
             }
             glUniformMatrix3x2fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat3x4>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -506,13 +556,15 @@ namespace gfx
             }
             glUniformMatrix3x4fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat4x2>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -533,13 +585,15 @@ namespace gfx
             }
             glUniformMatrix4x2fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
     void Shader::setUniform(const std::string& name, const std::vector<glm::mat4x3>& value)
     {
         if(!inUse())
         {
-            lc::Log<GL>("ERROR", "Shader is not in use");
+            lc::Log<GL>("WARNING", "Shader is not in use");
             return;
         }
         auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
@@ -564,5 +618,7 @@ namespace gfx
             }
             glUniformMatrix4x3fv(it->second, value.size(), GL_FALSE, data.data());
         }
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 }
