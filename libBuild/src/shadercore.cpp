@@ -186,6 +186,27 @@ namespace gfx
         }
     }
 
+    std::string GLShaderTypeToString(GLenum type)
+    {
+        switch (type)
+        {
+        case GL_VERTEX_SHADER:
+            return "GL_VERTEX_SHADER";
+        case GL_FRAGMENT_SHADER:
+            return "GL_FRAGMENT_SHADER";
+        case GL_GEOMETRY_SHADER:
+            return "GL_GEOMETRY_SHADER";
+        case GL_TESS_CONTROL_SHADER:
+            return "GL_TESS_CONTROL_SHADER";
+        case GL_TESS_EVALUATION_SHADER:
+            return "GL_TESS_EVALUATION_SHADER";
+        case GL_COMPUTE_SHADER:
+            return "GL_COMPUTE_SHADER";
+        default:
+            return "UNKNOWN";
+        }
+    }
+
     std::vector<Attribute> GetActiveAttributes(unsigned int program)
     {
         int count;
@@ -240,8 +261,10 @@ namespace gfx
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success)
         {
+            GLenum type;
+            glGetShaderiv(shader, GL_SHADER_TYPE, (int*)&type);
             glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-            lc::Log<GL>("ERROR", "Shader compilation failed: {}", infoLog);
+            lc::Log<GL>("ERROR", "Shader({}) compilation failed: {}", GLShaderTypeToString(type),infoLog);
             return false;
         }
         return true;
@@ -286,7 +309,7 @@ namespace gfx
         return shader;
     }
 
-    unsigned int createShaderProgram(std::vector<unsigned int>& shaders)
+    unsigned int CreateShaderProgram(std::vector<unsigned int>& shaders)
     {
         unsigned int program = glCreateProgram();
         for (auto shader : shaders)
@@ -317,7 +340,7 @@ namespace gfx
                 newShaders.emplace_back(shader);
         }
 
-        unsigned int newProgram = createShaderProgram(newShaders);
+        unsigned int newProgram = CreateShaderProgram(newShaders);
 
         if (IsProgramValid(newProgram))
         {

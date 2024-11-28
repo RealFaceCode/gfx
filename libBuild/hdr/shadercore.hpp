@@ -16,6 +16,7 @@ namespace gfx
     typedef Uniform Attribute;
 
     GFX_API std::string GLTypeToString(GLenum type);
+    GFX_API std::string GLShaderTypeToString(GLenum type);
     GFX_API std::vector<Attribute> GetActiveAttributes(unsigned int program);
     GFX_API std::vector<Uniform> GetActiveUniforms(unsigned int program);
     GFX_API void PrintAllAttrUnif(unsigned int program);
