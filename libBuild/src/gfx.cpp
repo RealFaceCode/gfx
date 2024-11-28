@@ -40,6 +40,18 @@ namespace gfx
         }
     }
 
+    bool CheckSupoortedOpenGLFeature(const char* feature)
+    {
+        GLint numExtensions;
+        glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+        for (int i = 0; i < numExtensions; i++)
+        {
+            if (strcmp((const char*)glGetStringi(GL_EXTENSIONS, i), feature) == 0)
+                return true;
+        }
+        return false;
+    }
+
     void WireFrameMode(bool mode)
     {
         if (mode)
