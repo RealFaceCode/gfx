@@ -1,6 +1,6 @@
 #include "buffers/texture.hpp"
-
 #include <glad/glad.h>
+#include "imageload.hpp"
 
 namespace gfx
 {
@@ -11,6 +11,13 @@ namespace gfx
     Texture::Texture(const Image& image)
     : texture(0), image(std::make_shared<Image>(image))
     {}
+
+    Texture::Texture(const std::string& path)
+    : texture(0)
+    {
+        auto loadedImage = LoadImageFromFile(path);
+        image = std::make_shared<Image>(loadedImage);
+    }
 
     Texture::Texture(const Texture& other)
     : texture(other.texture), image(other.image)

@@ -32,6 +32,7 @@ namespace gfx
     public:
         Texture();
         Texture(const Image& image);
+        Texture(const std::string& path);
         Texture(const Texture& other);
         Texture(Texture&& other);
         Texture& operator=(Texture&& other);
