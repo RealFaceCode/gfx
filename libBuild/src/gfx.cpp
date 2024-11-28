@@ -29,6 +29,17 @@ namespace gfx
         lc::Log<"GFX BUILD">("DEBUG", "OpenGL Version: {}", glVersion);
     }
 
+    void PrintSupportedOpenGLFeatures()
+    {
+        GLint numExtensions;
+        glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+        lc::Log<"GFX BUILD">("DEBUG", "OpenGL Extensions: {}", numExtensions);
+        for (int i = 0; i < numExtensions; i++)
+        {
+            lc::Log<"GFX BUILD">("DEBUG", "OpenGL Extension: {}", (const char*)glGetStringi(GL_EXTENSIONS, i));
+        }
+    }
+
     void WireFrameMode(bool mode)
     {
         if (mode)
