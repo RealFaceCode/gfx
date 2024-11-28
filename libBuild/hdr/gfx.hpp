@@ -6,10 +6,10 @@ typedef void *(*loadproc)(const char *name);
 
 namespace gfx
 {
-    bool GFX_API Init(loadproc);
-    void GFX_API DeInit();
-    void GFX_API Clear();
-    void GFX_API PrintVRVOpenGL();
-    void GFX_API PrintSupportedOpenGLFeatures();
-    void GFX_API WireFrameMode(bool);
+    GFX_API bool Init(loadproc);
+    GFX_API void DeInit();
+    GFX_API void Clear();
+    GFX_API void PrintVRVOpenGL();
+    GFX_API void PrintSupportedOpenGLFeatures();
+    GFX_API void WireFrameMode(bool);
 }
