@@ -23,4 +23,11 @@ namespace gfx
     constexpr const char GFX[] = "GFX BUILD";
     constexpr const char GL[] = "OPENGL";
     constexpr const char BINDLES_TEXTURE[] = "GL_ARB_bindless_texture";
+
+    enum class TextureBindingMode
+    {
+        BINDLESS,
+        BIND,
+        NONE
+    };
 }
