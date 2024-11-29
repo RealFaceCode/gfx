@@ -116,10 +116,10 @@ namespace gfx
     void DeInit()
     {}
 
-    void Clear()
+    void Clear(float r, float g, float b, float a, int clearFlags)
     {
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(clearFlags);
+        glClearColor(r, g, b, a);
     }
 
     void PrintVRVOpenGL()
@@ -190,5 +190,56 @@ namespace gfx
     uint64_t GetMaxUBOSiumultaneousBindings()
     {
         return maxUBOSiumultaneousBindings;
+    }
+
+    void SetClearColor(float r, float g, float b, float a)
+    {
+        glClearColor(r, g, b, a);
+    }
+
+    void EnableDepthTest(int depthTestFuncFlag)
+    {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(depthTestFuncFlag);
+    }
+
+    void DisableDepthTest()
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    void EnableBlend(int blend, int blendFuncFlag)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(blend, blendFuncFlag);
+    }
+
+    void DisableBlend()
+    {
+        glDisable(GL_BLEND);
+    }
+
+    void EnableFaceCulling(int cullFace, int frontFace)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(cullFace);
+        glFrontFace(frontFace);
+    }
+
+    void DisableFaceCulling()
+    {
+        glDisable(GL_CULL_FACE);
+    }
+
+    void EnableStencilTest(int stencilTest, int stencilFuncFlag, int stencilOpFlag)
+    {
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(stencilFuncFlag, 1, 0xFF);
+        glStencilOp(stencilOpFlag, stencilOpFlag, stencilOpFlag);
+    }
+
+    void DisableStencilTest()
+    {
+        glDisable(GL_STENCIL_TEST);
     }
 }
