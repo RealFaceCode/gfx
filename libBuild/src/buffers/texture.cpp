@@ -108,6 +108,26 @@ namespace gfx
         build(image);
     }
 
+    void Texture::makeResident()
+    {
+        if(bindingMode == TextureBindingMode::BINDLESS)
+        {
+            glMakeTextureHandleResidentARB(handle);
+            return;
+        }
+        lc::Log<GFX>("WARNING", "Cannot make texture resident in non-bindless mode.");
+    }
+
+    void Texture::makeNonResident()
+    {
+        if(bindingMode == TextureBindingMode::BINDLESS)
+        {
+            glMakeTextureHandleNonResidentARB(handle);
+            return;
+        }
+        lc::Log<GFX>("WARNING", "Cannot make texture non-resident in non-bindless mode.");
+    }
+
     void Texture::bind()
     {
         if(bindingMode == TextureBindingMode::BINDLESS)
