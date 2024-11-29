@@ -34,6 +34,14 @@ namespace gfx
         glUnmapBuffer(GL_UNIFORM_BUFFER);
     }
 
+    void UBO::map(uint64_t offset, uint64_t size, int flag, void* data)
+    {
+        glBindBufferBase(GL_UNIFORM_BUFFER, id.get(), buffer);
+        uint8_t* map = (uint8_t*)glMapBufferRange(GL_UNIFORM_BUFFER, offset, size, flag);
+        memcpy(map, data, size);
+        glUnmapBuffer(GL_UNIFORM_BUFFER);
+    }
+
     void UBO::create(uint64_t size, void* data, int mode)
     {
         glGenBuffers(1, &buffer);

@@ -15,6 +15,7 @@ namespace gfx
         ~UBO();
 
         void map(uint64_t offset, int flag, void* data);
+        void map(uint64_t offset, uint64_t size ,int flag, void* data);
 
         uint32_t getID() const;
         uint64_t getBlockID() const;
