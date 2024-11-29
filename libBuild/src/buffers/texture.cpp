@@ -2,42 +2,49 @@
 #include <glad/glad.h>
 #include "imageio.hpp"
 #include <lc.hpp>
+#include "gfx.hpp"
 
 namespace gfx
 {
+    TextureBindingMode Texture::bindingMode = TextureBindingMode::NONE;
+
     Texture::Texture()
     : texture(0)
-    {}
+    {
+        if(bindingMode == TextureBindingMode::NONE)
+            bindingMode = GetTextureBindingMode();
+    }
 
     Texture::Texture(const Image& image)
-    : texture(0)
+    : Texture()
     {
         build(image);
     }
 
     Texture::Texture(const std::string& path, bool flip)
-    : texture(0)
+    : Texture()
     {
         build(path, flip);
     }
 
     Texture::Texture(const unsigned char* data, int width, int height, int channels, bool flip)
-    : texture(0)
+    : Texture()
     {
         bild(data, width, height, channels, flip);
     }
 
     Texture::Texture(const Texture& other)
-    : texture(other.texture)
+    : texture(other.texture), handle(other.handle)
     {}
 
     Texture::Texture(Texture&& other)
-    : texture(other.texture)
+    : texture(other.texture), handle(other.handle)
     {}
 
     Texture& Texture::operator=(Texture&& other)
     {
         texture = other.texture;
+        handle = other.handle;
         return *this;
     }
 
@@ -50,7 +57,7 @@ namespace gfx
     void Texture::build(const Image& image)
     {
         glGenTextures(1, &texture);
-        bind();
+        glBindTexture(GL_TEXTURE_2D, texture);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<int>(wrapS));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<int>(wrapT));
@@ -67,16 +74,29 @@ namespace gfx
         }
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
+        auto format = GL_RGBA;
+        if (image.channels == 1)
+            format = GL_RED;
+        else if (image.channels == 2)
+            format = GL_RG;
+        else if (image.channels == 3)
+            format = GL_RGB;
+        
+
+        glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, image.data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        unbind();
+        if(bindingMode == TextureBindingMode::BINDLESS)
+        {
+            handle = glGetTextureHandleARB(texture);
+            glMakeTextureHandleResidentARB(handle);
+            lc::Log<GFX>("INFO", "Texture handle: {}", handle);
+        }
     }
 
     void Texture::build(const std::string& path, bool flip)
     {
-        auto loadedImage = LoadAsImage(path, flip);
-        build(loadedImage);
+        build(LoadAsImage(path, flip));
     }
 
     void Texture::bild(const unsigned char* data, int width, int height, int channels, bool flip)
@@ -91,14 +111,27 @@ namespace gfx
 
     void Texture::bind()
     {
+        if(bindingMode == TextureBindingMode::BINDLESS)
+        {
+            lc::Log<GFX>("WARNING", "Cannot bind texture in bindless mode.");
+            return;
+        }
+
         glBindTexture(GL_TEXTURE_2D, texture);
     }
 
     void Texture::unbind()
     {
+        if(bindingMode == TextureBindingMode::BINDLESS)
+        {
+            lc::Log<GFX>("WARNING", "Cannot unbind texture in bindless mode.");
+            return;
+        }
+
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    //TODO: remove this and write Texture bilder class
     void Texture::setParameter(uint32_t pname, int param)
     {
         bind();
@@ -148,8 +181,13 @@ namespace gfx
         anisotropy = param;
     }
 
-    const uint32_t& Texture::getTextureID() const
+    uint32_t Texture::getTextureID() const
     {
         return texture;
+    }
+
+    uint64_t Texture::getTextureHandle() const
+    {
+        return handle;
     }
 }
