@@ -21,14 +21,19 @@ namespace gfx {
         update();
     }
 
-    glm::mat4 Camera::GetViewMatrix()
+    const glm::mat4& Camera::GetViewMatrix() const
     {
-        return view;
+        return matrices.first;
     }
 
-    glm::mat4 Camera::GetProjectionMatrix()
+    const glm::mat4& Camera::GetProjectionMatrix() const
     {
-        return projection;
+        return matrices.second;
+    }
+
+    const std::pair<glm::mat4, glm::mat4>& Camera::GetMatrices() const
+    {
+        return matrices;
     }
 
     void Camera::processMovement(CameraMovement direction, float deltaTime)
@@ -125,7 +130,7 @@ namespace gfx {
 
     void Camera::updateViewMatrix()
     {
-        view = glm::lookAt(position, position + front, up);
+        matrices.first = glm::lookAt(position, position + front, up);
     }
 
     void Camera::updateProjectionMatrix()
@@ -133,10 +138,10 @@ namespace gfx {
         switch (type)
         {
         case CameraType::PERSPECTIVE:
-            projection = glm::perspective(glm::radians(fov), aspect, near, far);
+            matrices.second = glm::perspective(glm::radians(fov), aspect, near, far);
             break;
         case CameraType::ORTHOGRAPHIC:
-            projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, near, far);
+            matrices.second = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, near, far);
             break;
         default:
             break;

@@ -25,8 +25,9 @@ namespace gfx {
         Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float aspect);
         Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float movementSpeed, float mouseSensitivity, float fov, float near, float far, float aspect, float maxFov, float minFov, float maxPitch, float minPitch);
 
-        glm::mat4 GetViewMatrix();
-        glm::mat4 GetProjectionMatrix();
+        const glm::mat4& GetViewMatrix() const;
+        const glm::mat4& GetProjectionMatrix()const;
+        const std::pair<glm::mat4, glm::mat4>& GetMatrices() const;
         void processMovement(CameraMovement direction, float deltaTime);
         void processMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
         void processMouseScroll(float yoffset);
@@ -59,8 +60,7 @@ namespace gfx {
         glm::vec3 right;
         glm::vec3 worldUp;
 
-        glm::mat4 view;
-        glm::mat4 projection;
+        std::pair<glm::mat4, glm::mat4> matrices;
         bool updateView;
         bool updateProjection;
         bool invertYAixsMouse;
