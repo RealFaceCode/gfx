@@ -90,7 +90,6 @@ namespace gfx
         {
             handle = glGetTextureHandleARB(texture);
             glMakeTextureHandleResidentARB(handle);
-            lc::Log<GFX>("INFO", "Texture handle: {}", handle);
         }
     }
 
