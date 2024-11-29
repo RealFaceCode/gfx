@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.hpp"
+#include <cstdint>	
 
 typedef void *(*loadproc)(const char *name);
 
@@ -15,4 +16,5 @@ namespace gfx
     GFX_API void WireFrameMode(bool);
     GFX_API void SetTextureBindingMode(TextureBindingMode);
     GFX_API TextureBindingMode GetTextureBindingMode();
+    GFX_API uint64_t GetMaxUBOSiumultaneousBindings();
 }

@@ -1,16 +1,115 @@
 #include "gfx.hpp"
 #include <glad/glad.h>
 #include <lc.hpp>
+#include <logConfig.hpp>
 
 namespace gfx
 {
     static TextureBindingMode bindingMode = TextureBindingMode::NONE;
+    static uint64_t maxUBOSiumultaneousBindings = 0;
+
+    static void GLDebugCallBack(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+    {
+        if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+            return;
+
+        std::string sourceStr;
+        switch (source)
+        {
+        case GL_DEBUG_SOURCE_API:
+            sourceStr = "API";
+            break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+            sourceStr = "WINDOW SYSTEM";
+            break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+            sourceStr = "SHADER COMPILER";
+            break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+            sourceStr = "THIRD PARTY";
+            break;
+        case GL_DEBUG_SOURCE_APPLICATION:
+            sourceStr = "APPLICATION";
+            break;
+        case GL_DEBUG_SOURCE_OTHER:
+            sourceStr = "OTHER";
+            break;
+        }
+
+        std::string typeStr;
+        switch (type)
+        {
+        case GL_DEBUG_TYPE_ERROR:
+            typeStr = "ERROR";
+            break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            typeStr = "DEPRECATED BEHAVIOR";
+            break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            typeStr = "UNDEFINED BEHAVIOR";
+            break;
+        case GL_DEBUG_TYPE_PORTABILITY:
+            typeStr = "PORTABILITY";
+            break;
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            typeStr = "PERFORMANCE";
+            break;
+        case GL_DEBUG_TYPE_MARKER:
+            typeStr = "MARKER";
+            break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:
+            typeStr = "PUSH GROUP";
+            break;
+        case GL_DEBUG_TYPE_POP_GROUP:
+            typeStr = "POP GROUP";
+            break;
+        case GL_DEBUG_TYPE_OTHER:
+            typeStr = "OTHER";
+            break;
+        }
+
+        std::string severityStr;
+        switch (severity)
+        {
+        case GL_DEBUG_SEVERITY_HIGH:
+            severityStr = "HIGH";
+            break;
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            severityStr = "MEDIUM";
+            break;
+        case GL_DEBUG_SEVERITY_LOW:
+            severityStr = "LOW";
+            break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+            severityStr = "NOTIFICATION";
+            break;
+        }
+
+        lc::Log("OPENGL", "{} {} {} {} {}", sourceStr, typeStr, id, severityStr, message);
+    }
 
     bool Init(loadproc getProcAddress, TextureBindingMode mode)
     {
         auto load = gladLoadGLLoader(getProcAddress);
         if (load)
+        {
+            lc::Init();
+
+            lc::AddLogType("OPENGL");
+            lc::SetLogColorLevel("OPENGL", lc::LogColor::Red, {lc::LogEffect::Bold});
+            lc::SetLogColorMessage("OPENGL", true);
+            lc::SetLogColorMessage("OPENGL", lc::LogColor::Red);
+            lc::SetFormat("OPENGL", "[{LEVEL}] {MSG}");
+
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(GLDebugCallBack, nullptr);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+
+            glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, (GLint*)&maxUBOSiumultaneousBindings);
+
             SetTextureBindingMode(mode);
+        }
         return load;
     }
 
@@ -86,5 +185,10 @@ namespace gfx
     TextureBindingMode GetTextureBindingMode()
     {
         return bindingMode;
+    }
+
+    uint64_t GetMaxUBOSiumultaneousBindings()
+    {
+        return maxUBOSiumultaneousBindings;
     }
 }
