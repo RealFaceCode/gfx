@@ -19,6 +19,7 @@ namespace gfx
     GFX_API std::string GLShaderTypeToString(GLenum type);
     GFX_API std::vector<Attribute> GetActiveAttributes(unsigned int program);
     GFX_API std::vector<Uniform> GetActiveUniforms(unsigned int program);
+    GFX_API std::vector<Uniform> GetActiveUniformBlocks(unsigned int program);
     GFX_API void PrintAllAttrUnif(unsigned int program);
     GFX_API bool IsShaderCompiled(unsigned int shader);
     GFX_API bool IsProgramLinked(unsigned int program);

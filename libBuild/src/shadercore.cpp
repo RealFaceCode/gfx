@@ -241,6 +241,24 @@ namespace gfx
         return uniforms;
     }
 
+    std::vector<Uniform> GetActiveUniformBlocks(unsigned int program)
+    {
+        int count;
+        glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &count);
+        std::vector<Uniform> uniformBlocks;
+        uniformBlocks.reserve(count);
+        for (int i = 0; i < count; i++)
+        {
+            char name[128];
+            int size;
+            GLenum type = GL_UNIFORM_BLOCK;
+            glGetActiveUniformBlockName(program, i, 128, nullptr, name);
+            glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+            uniformBlocks.emplace_back(Uniform{name, type, size});
+        }
+        return uniformBlocks;
+    }
+
     void PrintAllAttrUnif(unsigned int program)
     {
         auto attributes = GetActiveAttributes(program);
