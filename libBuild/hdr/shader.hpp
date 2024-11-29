@@ -6,7 +6,6 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-
 namespace gfx
 {
     struct GFX_API Shader
@@ -26,6 +25,9 @@ namespace gfx
 
         void setUniform(const std::string& name, float value);
         void setUniform(const std::string& name, int value);
+        void setUniform(const std::string& name, unsigned long long int value);
+        void setUniformHandle(const std::string& name, unsigned long long int value);
+        void setUniformHandle(const std::string& name, const std::vector<unsigned long long int>& value);
         void setUniform(const std::string& name, const glm::vec2& value);
         void setUniform(const std::string& name, const glm::vec3& value);
         void setUniform(const std::string& name, const glm::vec4& value);
@@ -53,6 +55,7 @@ namespace gfx
         void setUniform(const std::string& name, const std::vector<glm::mat4x2>& value);
         void setUniform(const std::string& name, const std::vector<glm::mat4x3>& value);
 
+        unsigned int getProgram() const;
     private:
         unsigned int program;
         std::vector<std::pair<std::string, GLenum>> paths;

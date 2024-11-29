@@ -84,6 +84,48 @@ namespace gfx
             lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
+    void Shader::setUniform(const std::string& name, unsigned long long int value)
+    {
+        if(!inUse())
+        {
+            lc::Log<GL>("WARNING", "Shader is not in use");
+            return;
+        }
+        auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
+        if (it != uniforms.end())
+            glUniform1ui(it->second, value);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
+    }
+
+    void Shader::setUniformHandle(const std::string& name, unsigned long long int value)
+    {
+        if(!inUse())
+        {
+            lc::Log<GL>("WARNING", "Shader is not in use");
+            return;
+        }
+        auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
+        if (it != uniforms.end())
+            glUniformHandleui64ARB(it->second, value);
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
+    }
+
+    void Shader::setUniformHandle(const std::string& name, const std::vector<unsigned long long int>& value)
+    {
+        if(!inUse())
+        {
+            lc::Log<GL>("WARNING", "Shader is not in use");
+            return;
+        }
+        auto it = std::find_if(uniforms.begin(), uniforms.end(), [name](const auto& u) { return u.first.name == name; });
+        if (it != uniforms.end())
+            glUniformHandleui64vARB(it->second, value.size(), value.data());
+        else
+            lc::Log<GL>("WARNING", "Uniform {} not found", name);
+    }
+
     void Shader::setUniform(const std::string& name, const glm::vec2& value)
     {
         if(!inUse())
@@ -620,5 +662,10 @@ namespace gfx
         }
         else
             lc::Log<GL>("WARNING", "Uniform {} not found", name);
+    }
+
+    unsigned int Shader::getProgram() const
+    {
+        return program;
     }
 }
