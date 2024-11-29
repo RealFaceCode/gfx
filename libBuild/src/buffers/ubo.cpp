@@ -16,7 +16,7 @@ namespace gfx
         create(size, nullptr, mode);
     }
 
-    UBO::UBO(uint64_t size, void* data, int mode)
+    UBO::UBO(uint64_t size, const void* data, int mode)
     {
         create(size, data, mode);
     }
@@ -26,7 +26,7 @@ namespace gfx
         glDeleteBuffers(1, &buffer);
     }
 
-    void UBO::map(uint64_t offset, int flag, void* data)
+    void UBO::map(uint64_t offset, int flag, const void* data)
     {
         glBindBufferBase(GL_UNIFORM_BUFFER, id.get(), buffer);
         uint8_t* map = (uint8_t*)glMapBufferRange(GL_UNIFORM_BUFFER, offset, size, flag);
@@ -34,7 +34,7 @@ namespace gfx
         glUnmapBuffer(GL_UNIFORM_BUFFER);
     }
 
-    void UBO::map(uint64_t offset, uint64_t size, int flag, void* data)
+    void UBO::map(uint64_t offset, uint64_t size, int flag, const void* data)
     {
         glBindBufferBase(GL_UNIFORM_BUFFER, id.get(), buffer);
         uint8_t* map = (uint8_t*)glMapBufferRange(GL_UNIFORM_BUFFER, offset, size, flag);
@@ -42,7 +42,7 @@ namespace gfx
         glUnmapBuffer(GL_UNIFORM_BUFFER);
     }
 
-    void UBO::create(uint64_t size, void* data, int mode)
+    void UBO::create(uint64_t size, const void* data, int mode)
     {
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_UNIFORM_BUFFER, buffer);
