@@ -21,17 +21,17 @@ namespace gfx {
         update();
     }
 
-    const glm::mat4& Camera::GetViewMatrix() const
+    const glm::mat4& Camera::getViewMatrix() const
     {
         return matrices.first;
     }
 
-    const glm::mat4& Camera::GetProjectionMatrix() const
+    const glm::mat4& Camera::getProjectionMatrix() const
     {
         return matrices.second;
     }
 
-    const std::pair<glm::mat4, glm::mat4>& Camera::GetMatrices() const
+    const std::pair<glm::mat4, glm::mat4>& Camera::getMatrices() const
     {
         return matrices;
     }

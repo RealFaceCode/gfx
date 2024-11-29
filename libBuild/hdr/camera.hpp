@@ -25,9 +25,10 @@ namespace gfx {
         Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float aspect);
         Camera(CameraType type, glm::vec3 startPosition, glm::vec3 upDirection, float startYaw, float startPitch, float movementSpeed, float mouseSensitivity, float fov, float near, float far, float aspect, float maxFov, float minFov, float maxPitch, float minPitch);
 
-        const glm::mat4& GetViewMatrix() const;
-        const glm::mat4& GetProjectionMatrix()const;
-        const std::pair<glm::mat4, glm::mat4>& GetMatrices() const;
+        const glm::mat4& getViewMatrix() const;
+        const glm::mat4& getProjectionMatrix()const;
+        const std::pair<glm::mat4, glm::mat4>& getMatrices() const;
+        
         void processMovement(CameraMovement direction, float deltaTime);
         void processMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
         void processMouseScroll(float yoffset);
