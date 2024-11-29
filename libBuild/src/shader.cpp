@@ -33,10 +33,18 @@ namespace gfx
     {
         LoadShader(program, paths);
         auto uniform = GetActiveUniforms(program);
+        auto uniformBlock = GetActiveUniformBlocks(program);
+
         uniforms.clear();
         uniforms.reserve(uniform.size());
+        uniformBlocks.clear();
+        uniformBlocks.reserve(uniformBlock.size());
+
         for (auto& u : uniform)
             uniforms.emplace_back(u, glGetUniformLocation(program, u.name.c_str()));
+        
+        for (auto& u : uniformBlock)
+            uniformBlocks.emplace_back(u, glGetUniformBlockIndex(program, u.name.c_str()));
     }
 
     bool Shader::inUse()
@@ -664,8 +672,34 @@ namespace gfx
             lc::Log<GL>("WARNING", "Uniform {} not found", name);
     }
 
+    void Shader::setUniformBlockBinding(const std::string& name, unsigned int blockID)
+    {
+        if(!inUse())
+        {
+            lc::Log<GL>("WARNING", "Shader is not in use");
+            return;
+        }
+        auto block = std::find_if(uniformBlocks.begin(), uniformBlocks.end(), [name](const auto& u) { return u.first.name == name; });
+        if (block != uniformBlocks.end())
+            glUniformBlockBinding(program, block->second, blockID);
+        else
+            lc::Log<GL>("WARNING", "Uniform block {} not found", name);
+    }
+
     unsigned int Shader::getProgram() const
     {
         return program;
+    }
+
+    void Shader::printUniforms()
+    {
+        for (auto& u : uniforms)
+            lc::Log<GL>("INFO", "Uniform: {} Location: {}", u.first.name, u.second);
+    }
+
+    void Shader::printUniformBlocks()
+    {
+        for (auto& u : uniformBlocks)
+            lc::Log<GL>("INFO", "Uniform Block: {} Location: {}", u.first.name, u.second);
     }
 }

@@ -54,11 +54,16 @@ namespace gfx
         void setUniform(const std::string& name, const std::vector<glm::mat3x4>& value);
         void setUniform(const std::string& name, const std::vector<glm::mat4x2>& value);
         void setUniform(const std::string& name, const std::vector<glm::mat4x3>& value);
+        void setUniformBlockBinding(const std::string& name, unsigned int blockID);
 
         unsigned int getProgram() const;
+
+        void printUniforms();
+        void printUniformBlocks();
     private:
         unsigned int program;
         std::vector<std::pair<std::string, GLenum>> paths;
         std::vector<std::pair<Uniform, int>> uniforms;
+        std::vector<std::pair<Uniform, int>> uniformBlocks;
     };
 }
