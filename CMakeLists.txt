@@ -109,22 +109,22 @@ if(NOT TARGET LogCraft)
     add_subdirectory(${LOGCRAFT_LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR}/LogCraft)
 endif()
 
-
-
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS  "libBuild/src/*.cpp")
 
 if(NOT TARGET ${PROJECT_NAME})
+    set(BUILD_SHARED_LIBS ON)
+
     add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
     target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
     target_include_directories(${PROJECT_NAME} 
     PUBLIC ${CMAKE_SOURCE_DIR}/libBuild/hdr
     )
     target_include_directories(${PROJECT_NAME} 
-    PUBLIC ${LOGCRAFT_LIB_DIR}/libBuild/hdr 
-    PUBLIC ${EUTIL_LIB_DIR}/libBuild/hdr 
-    PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/glad/include 
-    PUBLIC ${GLM_LIB_DIR}
-    PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/stb
+    PRIVATE ${LOGCRAFT_LIB_DIR}/libBuild/hdr 
+    PRIVATE ${EUTIL_LIB_DIR}/libBuild/hdr 
+    PRIVATE ${CMAKE_SOURCE_DIR}/thirdparty/glad/include 
+    PRIVATE ${GLM_LIB_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}/thirdparty/stb
     )
     target_link_libraries(${PROJECT_NAME} PRIVATE LogCraft eUtil glad glm)
     target_compile_definitions(${PROJECT_NAME} PRIVATE GFX_EXPORTS)
