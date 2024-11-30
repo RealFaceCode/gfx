@@ -1,10 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 set(PROJECT_NAME gfx)
 project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES C CXX)
-
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 
 if($ENV{GFX_BUILD_EXAMPLES})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
@@ -17,13 +13,19 @@ include(FetchContent)
 set(EUTIL_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/eUtil")
 set(LOGCRAFT_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/LogCraft")
 set(GLM_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/glm")
+set(ASSIMP_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/assimp")
+
+set(EUTIL_REPO_URL "https://github.com/RealFaceCode/eUtil.git")
+set(LOGCRAFT_REPO_URL "https://github.com/RealFaceCode/LogCraft.git")
+set(GLM_REPO_URL "https://github.com/g-truc/glm.git")
+set(ASSIMP_REPO_URL "https://github.com/assimp/assimp.git")
 
 if(NOT EXISTS "${EUTIL_LIB_DIR}/CMakeLists.txt")
     message(STATUS "Library 'eUtil' not found. Fetching...")
 
     FetchContent_Declare(
         eUtil
-        GIT_REPOSITORY https://github.com/RealFaceCode/eUtil.git
+        GIT_REPOSITORY ${EUTIL_REPO_URL}
         GIT_TAG main
         SOURCE_DIR ${EUTIL_LIB_DIR}
     )
@@ -48,7 +50,7 @@ if(NOT EXISTS "${LOGCRAFT_LIB_DIR}/CMakeLists.txt")
 
     FetchContent_Declare(
         LogCraft
-        GIT_REPOSITORY https://github.com/RealFaceCode/LogCraft.git
+        GIT_REPOSITORY ${LOGCRAFT_REPO_URL}
         GIT_TAG main
         SOURCE_DIR ${LOGCRAFT_LIB_DIR}
     )
@@ -73,7 +75,7 @@ if(NOT EXISTS "${GLM_LIB_DIR}/CMakeLists.txt")
 
     FetchContent_Declare(
         glm
-        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        GIT_REPOSITORY ${GLM_REPO_URL}
         GIT_TAG
         SOURCE_DIR ${GLM_LIB_DIR}
     )
@@ -93,8 +95,38 @@ else()
     )
 endif()
 
+if(NOT EXISTS "${ASSIMP_LIB_DIR}/CMakeLists.txt")
+    message(STATUS "Library 'assimp' not found. Fetching...")
+    FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY ${ASSIMP_REPO_URL}
+        GIT_TAG 
+        SOURCE_DIR ${ASSIMP_LIB_DIR}
+    )
+
+    if(NOT assimp_POPULATED)
+        FetchContent_Populate(assimp)
+    endif()
+
+    message(STATUS "Library 'assimp' fetched.")
+else()
+    message(STATUS "Library 'assimp' already exists.")
+    message(STATUS "Try to fetch updates...")
+
+    execute_process(
+        COMMAND git pull
+        WORKING_DIRECTORY ${ASSIMP_LIB_DIR}
+    )
+endif()
+
+if(NOT TARGET assimp)
+    set(ASSIMP_INSTALL OFF)
+    set(ASSIMP_WARNINGS_AS_ERRORS OFF)
+    add_subdirectory(${ASSIMP_LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR}/assimp)
+endif()
+
 if(NOT TARGET glad)
-    add_subdirectory(thirdparty/glad)
+    add_subdirectory(thirdpartynongit/glad ${CMAKE_CURRENT_BINARY_DIR}/glad)
 endif()
 
 if(NOT TARGET glm)
@@ -112,8 +144,6 @@ endif()
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS  "libBuild/src/*.cpp")
 
 if(NOT TARGET ${PROJECT_NAME})
-    set(BUILD_SHARED_LIBS ON)
-
     add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
     target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
     target_include_directories(${PROJECT_NAME} 
@@ -122,11 +152,12 @@ if(NOT TARGET ${PROJECT_NAME})
     target_include_directories(${PROJECT_NAME} 
     PRIVATE ${LOGCRAFT_LIB_DIR}/libBuild/hdr 
     PRIVATE ${EUTIL_LIB_DIR}/libBuild/hdr 
-    PRIVATE ${CMAKE_SOURCE_DIR}/thirdparty/glad/include 
+    PRIVATE ${CMAKE_SOURCE_DIR}/thirdpartynongit/glad/include 
     PRIVATE ${GLM_LIB_DIR}
-    PRIVATE ${CMAKE_SOURCE_DIR}/thirdparty/stb
+    PRIVATE ${CMAKE_SOURCE_DIR}/thirdpartynongit/stb
+    PRIVATE ${ASSIMP_LIB_DIR}/include
     )
-    target_link_libraries(${PROJECT_NAME} PRIVATE LogCraft eUtil glad glm)
+    target_link_libraries(${PROJECT_NAME} PRIVATE LogCraft eUtil glad glm assimp)
     target_compile_definitions(${PROJECT_NAME} PRIVATE GFX_EXPORTS)
 endif()
 
