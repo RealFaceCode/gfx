@@ -1,7 +1,6 @@
 #include "shader.hpp"
 #include <lc.hpp>
 
-
 namespace gfx
 {
     Shader::Shader::Shader()
