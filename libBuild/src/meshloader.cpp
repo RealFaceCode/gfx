@@ -1,6 +1,5 @@
 #include "meshloader.hpp"
 
-#include <assimp/Importer.hpp>
 #include <assimp/config.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -217,14 +216,14 @@ namespace gfx
         return sg;
     }
 
-    MeshLoader::MeshLoader(MeshPostProcessingFlag flags)
+    MeshLoader::MeshLoader(uint32_t flags)
         : postProcessing(flags)
     {
     }
 
     SceneGraph MeshLoader::loadMesh(const char* path, bool logInfo)
     {
-        const aiScene* scene = importer.ReadFile(path, static_cast<aiPostProcessSteps>(postProcessing));
+        const aiScene* scene = importer.ReadFile(path, postProcessing);
         if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             lc::Log<gfx::GL>("ERROR", "Failed to load model");
@@ -247,7 +246,7 @@ namespace gfx
         return sg;
     }
 
-    void MeshLoader::setPostProcessing(MeshPostProcessingFlag flags)
+    void MeshLoader::setPostProcessing(uint32_t flags)
     {
         postProcessing = flags;
     }

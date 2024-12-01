@@ -2,8 +2,7 @@
 
 #include "defines.hpp"
 #include "buffers/scenegraph.hpp"
-
-struct Assimp::Importer;
+#include <assimp/Importer.hpp>
 
 namespace gfx
 {
@@ -46,11 +45,11 @@ namespace gfx
     {
     public:
         MeshLoader() = default;
-        explicit MeshLoader(MeshPostProcessingFlag flags);
+        explicit MeshLoader(uint32_t flags);
         ~MeshLoader() = default;
 
         SceneGraph loadMesh(const char* path, bool logInfo = false);
-        void setPostProcessing(MeshPostProcessingFlag flags);
+        void setPostProcessing(uint32_t flags);
         void setPropertyBool(const char* name, bool value);
         void setPropertyInt(const char* name, int value);
         void setPropertyFloat(const char* name, float value);
@@ -58,6 +57,6 @@ namespace gfx
 
     private:
         Assimp::Importer importer;
-        MeshPostProcessingFlag postProcessing;
+        uint32_t postProcessing;
     };
 }
