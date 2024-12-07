@@ -10,15 +10,17 @@ endif()
 
 include(FetchContent)
 
-set(EUTIL_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/eUtil")
-set(LOGCRAFT_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/LogCraft")
-set(GLM_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/glm")
-set(ASSIMP_LIB_DIR "${CMAKE_SOURCE_DIR}/thirdparty/assimp")
+set(EUTIL_LIB_DIR           "${CMAKE_SOURCE_DIR}/thirdparty/eUtil")
+set(LOGCRAFT_LIB_DIR        "${CMAKE_SOURCE_DIR}/thirdparty/LogCraft")
+set(GLM_LIB_DIR             "${CMAKE_SOURCE_DIR}/thirdparty/glm")
+set(ASSIMP_LIB_DIR          "${CMAKE_SOURCE_DIR}/thirdparty/assimp")
+set(FREETYPE_LIB_DIR        "${CMAKE_SOURCE_DIR}/thirdparty/freetype")
 
-set(EUTIL_REPO_URL "https://github.com/RealFaceCode/eUtil.git")
-set(LOGCRAFT_REPO_URL "https://github.com/RealFaceCode/LogCraft.git")
-set(GLM_REPO_URL "https://github.com/g-truc/glm.git")
-set(ASSIMP_REPO_URL "https://github.com/assimp/assimp.git")
+set(EUTIL_REPO_URL          "https://github.com/RealFaceCode/eUtil.git")
+set(LOGCRAFT_REPO_URL       "https://github.com/RealFaceCode/LogCraft.git")
+set(GLM_REPO_URL            "https://github.com/g-truc/glm.git")
+set(ASSIMP_REPO_URL         "https://github.com/assimp/assimp.git")
+set(FREETYPE_REPO_URL       "https://gitlab.freedesktop.org/freetype/freetype.git")
 
 if(NOT EXISTS "${EUTIL_LIB_DIR}/CMakeLists.txt")
     message(STATUS "Library 'eUtil' not found. Fetching...")
@@ -119,6 +121,34 @@ else()
     )
 endif()
 
+if(NOT EXISTS "${FREETYPE_LIB_DIR}/CMakeLists.txt")
+    message(STATUS "Library 'freetype' not found. Fetching...")
+    FetchContent_Declare(
+        freetype
+        GIT_REPOSITORY ${FREETYPE_REPO_URL}
+        GIT_TAG 
+        SOURCE_DIR ${FREETYPE_LIB_DIR}
+    )
+
+    if(NOT freetype_POPULATED)
+        FetchContent_Populate(freetype)
+    endif()
+
+    message(STATUS "Library 'freetype' fetched.")
+else()
+    message(STATUS "Library 'freetype' already exists.")
+    message(STATUS "Try to fetch updates...")
+
+    execute_process(
+        COMMAND git pull
+        WORKING_DIRECTORY ${FREETYPE_LIB_DIR}
+    )
+endif()
+
+if(NOT TARGET freetype)
+    add_subdirectory(${FREETYPE_LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR}/freetype)
+endif()
+
 if(NOT TARGET assimp)
     set(ASSIMP_INSTALL OFF)
     set(ASSIMP_WARNINGS_AS_ERRORS OFF)
@@ -156,8 +186,9 @@ if(NOT TARGET ${PROJECT_NAME})
     PRIVATE ${GLM_LIB_DIR}
     PRIVATE ${CMAKE_SOURCE_DIR}/thirdpartynongit/stb
     PRIVATE ${ASSIMP_LIB_DIR}/include
+    PRIVATE ${FREETYPE_LIB_DIR}/include
     )
-    target_link_libraries(${PROJECT_NAME} PRIVATE LogCraft eUtil glad glm assimp)
+    target_link_libraries(${PROJECT_NAME} PRIVATE LogCraft eUtil glad glm assimp freetype)
     target_compile_definitions(${PROJECT_NAME} PRIVATE GFX_EXPORTS)
 endif()
 
