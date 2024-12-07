@@ -3,136 +3,81 @@
 #include "imageio.hpp"
 #include <lc.hpp>
 #include "gfx.hpp"
+#include "texturebuilder.hpp"
 
 namespace gfx
 {
-    TextureBindingMode Texture::bindingMode = TextureBindingMode::NONE;
-
     Texture::Texture()
-    : texture(0)
+        : texture(0), handle(0), format(TextureFormat::RGBA), typeData(TextureDataType::UNSIGNED_BYTE), type(TextureType::TEXTURE_2D)
     {
-        if(bindingMode == TextureBindingMode::NONE)
-            bindingMode = GetTextureBindingMode();
     }
 
-    Texture::Texture(const Image& image)
-    : Texture()
+    Texture::Texture(uint32_t texture, TextureFormat format, TextureDataType typeData, TextureType type)
+        : texture(texture), handle(0), format(format), typeData(typeData), type(type)
     {
-        build(image);
     }
 
-    Texture::Texture(const std::string& path, bool flip)
-    : Texture()
+    Texture::Texture(uint32_t texture, uint64_t handle, TextureFormat format, TextureDataType typeData, TextureType type)
+        : texture(texture), handle(handle), format(format), typeData(typeData), type(type)
     {
-        build(path, flip);
     }
 
-    Texture::Texture(const unsigned char* data, int width, int height, int channels, bool flip)
-    : Texture()
+    Texture::Texture(const Texture& texture)
+        : texture(texture.texture), handle(texture.handle), format(texture.format), type(texture.type)
     {
-        build(data, width, height, channels, flip);
     }
 
-    Texture::Texture(const Texture& other)
-    : texture(other.texture), handle(other.handle)
-    {}
-
-    Texture::Texture(Texture&& other)
-    : texture(other.texture), handle(other.handle)
-    {}
-
-    Texture& Texture::operator=(Texture&& other)
+    Texture::Texture(Texture&& texture) noexcept
+        : texture(texture.texture), handle(texture.handle), format(texture.format), type(texture.type)
     {
-        texture = other.texture;
-        handle = other.handle;
-        return *this;
+        texture.texture = 0;
+        texture.handle = 0;
     }
 
     Texture::~Texture()
     {
-        if (texture != 0)
-            glDeleteTextures(1, &texture);
+        destroy();
     }
 
-    void Texture::build(const Image& image)
+    Texture& Texture::operator=(const Texture& texture)
     {
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, std::to_underlying(wrapS));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, std::to_underlying(wrapT));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, std::to_underlying(wrapR));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, std::to_underlying(minFilter));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, std::to_underlying(magFilter));
-
-        float maxAnisotropy = 0.0f;
-        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &maxAnisotropy);
-        if (anisotropy > maxAnisotropy)
+        if(this != &texture)
         {
-            anisotropy = maxAnisotropy;
-            lc::Log<GFX>("WARNING", "Anisotropy value is greater than the maximum anisotropy value supported by the system. Setting anisotropy to the maximum value supported by the system.");
+            this->texture = texture.texture;
+            this->handle = texture.handle;
+            this->format = texture.format;
+            this->type = texture.type;
         }
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
 
-        auto format = GL_RGBA;
-        if (image.channels == 1)
-            format = GL_RED;
-        else if (image.channels == 2)
-            format = GL_RG;
-        else if (image.channels == 3)
-            format = GL_RGB;
-        
+        return *this;
+    }
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, format, GL_UNSIGNED_BYTE, image.data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        if(bindingMode == TextureBindingMode::BINDLESS)
+    Texture& Texture::operator=(Texture&& texture) noexcept
+    {
+        if(this != &texture)
         {
-            handle = glGetTextureHandleARB(texture);
-            glMakeTextureHandleResidentARB(handle);
+            this->texture = texture.texture;
+            this->handle = texture.handle;
+            this->format = texture.format;
+            this->type = texture.type;
+
+            texture.texture = 0;
+            texture.handle = 0;
         }
+
+        return *this;
     }
 
-    void Texture::build(const std::string& path, bool flip)
+    void Texture::setSubData(int level, int xoffset, int yoffset, int width, int height, const void* data)
     {
-        build(LoadAsImage(path, flip));
-    }
-
-    void Texture::build(const unsigned char* data, int width, int height, int channels, bool flip)
-    {
-        Image image;
-        image.data = const_cast<unsigned char*>(data);
-        image.width = width;
-        image.height = height;
-        image.channels = channels;
-        build(image);
-    }
-
-    void Texture::makeResident()
-    {
-        if(bindingMode == TextureBindingMode::BINDLESS)
-        {
-            glMakeTextureHandleResidentARB(handle);
-            return;
-        }
-        lc::Log<GFX>("WARNING", "Cannot make texture resident in non-bindless mode.");
-    }
-
-    void Texture::makeNonResident()
-    {
-        if(bindingMode == TextureBindingMode::BINDLESS)
-        {
-            glMakeTextureHandleNonResidentARB(handle);
-            return;
-        }
-        lc::Log<GFX>("WARNING", "Cannot make texture non-resident in non-bindless mode.");
+        glTexSubImage2D(GetType(type), level, xoffset, yoffset, width, height, GetFormat(format), GetTextureDataType(typeData), data);
     }
 
     void Texture::bind()
     {
-        if(bindingMode == TextureBindingMode::BINDLESS)
+        if(gfx::GetTextureBindingMode() == TextureBindingMode::BINDLESS)
         {
-            lc::Log<GFX>("WARNING", "Cannot bind texture in bindless mode.");
+            lc::Log<gfx::GL>("WARNING", "Cannot bind texture in bindless mode");
             return;
         }
 
@@ -141,71 +86,28 @@ namespace gfx
 
     void Texture::unbind()
     {
-        if(bindingMode == TextureBindingMode::BINDLESS)
+        if(gfx::GetTextureBindingMode() == TextureBindingMode::BINDLESS)
         {
-            lc::Log<GFX>("WARNING", "Cannot unbind texture in bindless mode.");
+            lc::Log<gfx::GL>("WARNING", "Cannot bind texture in bindless mode");
             return;
         }
-
+        
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    //TODO: remove this and write Texture bilder class
-    void Texture::setParameter(uint32_t pname, int param)
+    void Texture::destroy()
     {
-        bind();
-        glTexParameteri(GL_TEXTURE_2D, pname, param);
-        unbind();
+        if(texture != 0)
+            glDeleteTextures(1, &texture);
+        texture = 0;
     }
 
-    void Texture::setParameter(uint32_t pname, float param)
-    {
-        bind();
-        glTexParameterf(GL_TEXTURE_2D, pname, param);
-        unbind();
-    }
-
-    void Texture::setWrapS(TextureWrap param)
-    {
-        wrapS = param;
-        setParameter(GL_TEXTURE_WRAP_S, static_cast<int>(param));
-    }
-
-    void Texture::setWrapT(TextureWrap param)
-    {
-        wrapT = param;
-        setParameter(GL_TEXTURE_WRAP_T, static_cast<int>(param));
-    }
-
-    void Texture::setWrapR(TextureWrap param)
-    {
-        wrapR = param;
-        setParameter(GL_TEXTURE_WRAP_R, static_cast<int>(param));
-    }
-
-    void Texture::setMinFilter(TextureMinMagFilter param)
-    {
-        minFilter = param;
-        setParameter(GL_TEXTURE_MIN_FILTER, static_cast<int>(param));
-    }
-
-    void Texture::setMagFilter(TextureMinMagFilter param)
-    {
-        magFilter = param;
-        setParameter(GL_TEXTURE_MAG_FILTER, static_cast<int>(param));
-    }
-
-    void Texture::setAnisotropy(float param)
-    {
-        anisotropy = param;
-    }
-
-    uint32_t Texture::getTextureID() const
+    uint32_t Texture::getTexture() const
     {
         return texture;
     }
 
-    uint64_t Texture::getTextureHandle() const
+    uint64_t Texture::getHandle() const
     {
         return handle;
     }
