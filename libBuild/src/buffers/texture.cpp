@@ -30,7 +30,7 @@ namespace gfx
     Texture::Texture(const unsigned char* data, int width, int height, int channels, bool flip)
     : Texture()
     {
-        bild(data, width, height, channels, flip);
+        build(data, width, height, channels, flip);
     }
 
     Texture::Texture(const Texture& other)
@@ -59,11 +59,11 @@ namespace gfx
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<int>(wrapS));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<int>(wrapT));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, static_cast<int>(wrapR));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(minFilter));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(magFilter));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, std::to_underlying(wrapS));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, std::to_underlying(wrapT));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, std::to_underlying(wrapR));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, std::to_underlying(minFilter));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, std::to_underlying(magFilter));
 
         float maxAnisotropy = 0.0f;
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &maxAnisotropy);
@@ -98,7 +98,7 @@ namespace gfx
         build(LoadAsImage(path, flip));
     }
 
-    void Texture::bild(const unsigned char* data, int width, int height, int channels, bool flip)
+    void Texture::build(const unsigned char* data, int width, int height, int channels, bool flip)
     {
         Image image;
         image.data = const_cast<unsigned char*>(data);

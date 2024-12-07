@@ -127,7 +127,7 @@ namespace gfx
 
         void build(const Image& image);
         void build(const std::string& path, bool flip = true);
-        void bild(const unsigned char* data, int width, int height, int channels, bool flip = true);
+        void build(const unsigned char* data, int width, int height, int channels, bool flip = true);
         void makeResident();
         void makeNonResident();
         void bind();
